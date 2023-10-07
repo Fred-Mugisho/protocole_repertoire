@@ -1,0 +1,19 @@
+:root {
+    --green-clair: #00A64D;
+    --green-sombre: #022405;
+    --orange: #bcaf1ac9;
+}
+.btn-login{
+    background-color: var(--green-clair) !important;
+    border-radius: 30px !important;
+}
+
+.title{
+    color: var(--green-clair) !important;
+    font-weight: bold !important;
+}
+
+.sub-title{
+    color: var(--orange) !important;
+    font-weight: bold !important;
+}

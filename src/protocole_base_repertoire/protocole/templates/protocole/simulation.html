@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>HOME</title>
+    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style_home.css' %}">
+    
+</head>
+<body style="background-color: rgba(0, 0, 0, 0.8);">
+    <div class="container-fluid mb-3">
+        <h1 class="text-center title mt-3">SIMULATION DU PROTOCOLE</h1>
+        <hr class="text-white">
+        <div class="row g-4">
+            {% for node in nodes %}
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header fw-bolder text-center text-uppercase">{{node}}</div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Block</th>
+                                            <th scope="col">Data</th>
+                                            <th scope="col">Etat</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if node.all_caches %}
+                                            {% for cache in node.all_caches %}
+                                                <tr>
+                                                    <td>{{cache.bloc}}</td>
+                                                    <td>{{cache.bloc.data}}</td>
+                                                    <td>{{cache.state_cache_state}}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td class="text-danger">Cache vide</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <hr class="text-white">
+        <div class="card">
+            <div class="card-body">
+                <form action="" method="post" enctype="multipart/form-data" class="">
+                    <div class="">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col">
+                                <select name="month" class="form-control form-select custom-select">
+                                    {% for node in nodes %}
+                                        <option value={{node.ide}}>{{node.node_string}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col">
+                                <select name="month" class="form-control form-select custom-select">
+                                    {% for block in blocks %}
+                                        <option value={{block.id}}>{{block}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col d-flex gap-2">
+                                <button type="button" class="btn btn-secondary btn-sm" data-mdb-dismiss="modal">Lire</button>
+                                <button type="submit" type="button" class="btn btn-success btn-sm">Ecrire</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <hr class="text-white">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header fw-bolder">Repertoire</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Block</th>
+                                        <th scope="col">Etat</th>
+                                        <th scope="col">Owner bits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for dir in directory %}
+                                        <tr>
+                                            <td>{{dir.bloc}}</td>
+                                            <td>{{dir.state_directory}}</td>
+                                            <td>{{dir.owner_bits}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="{% url "protocole:reinitialisation_data" %}" class="btn btn-primary btn-sm">
+                            Réinitialiser
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header fw-bolder">Messages</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Type message</th>
+                                        <th scope="col">Source</th>
+                                        <th scope="col">Destination</th>
+                                        <th scope="col">Contenu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if messages %}
+                                        {% for msg in messages %}
+                                            <tr>
+                                                <td>{{msg.type_message}}</td>
+                                                <td>{{msg.source.node_string}}</td>
+                                                <td>{{msg.destination.node_string}}</td>
+                                                <td>{{msg.content_msg}}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td class="text-danger">Aucun message</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

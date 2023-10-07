@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>HOME</title>
+    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style_home.css' %}">
+    <style>
+        #intro {
+            background-image: url("/static/images/bg-1.jpg");
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="intro" class="bg-image shadow-2-strong">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.8);">
+            <div class="container d-flex align-items-center justify-content-center text-center h-100">
+                <div class="text-white">
+                    <h2 class="mb-3 title">
+                        SYSTEMES A MULTIPROCESSEURS ET MACHINES PARALLELES
+                    </h2>
+                    <h3 class="mb-4 fw-bolder">Simulation du protocole basé sur le répertoire</h3>
+                    <h5 class="mb-4 fw-bolder">Tech 1 Génie Informatique / FSTA</h5>
+                    <h3 class="mb-4">Par MUGISHO CIRINDYE Frederick</h3>
+                    <h3 class="mt-4">Dispensé par Msc KAMBALE WAMUHINDO Abednego</h3>
+                    <a class="btn btn-success btn-login btn-lg m-4" href="{% url "protocole:simulation" %}" role="button">
+                        Commencer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
