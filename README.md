@@ -1,6 +1,6 @@
-# PROTOCOLE BASE SUR LE REPERTOIRE
+### PROTOCOLE BASE SUR LE REPERTOIRE
 
-## Les projets permet de simuler le système de coherence (protocole basé sur le répertoire) de cache pour le cours de système à multi-processeur et machine parallèle
+#### Les projets permet de simuler le système de coherence (protocole basé sur le répertoire) de cache pour le cours de système à multi-processeur et machine parallèle
 
 Pour utiliser l'app suivre les config suivantes:
 1. instaler python
@@ -10,4 +10,4 @@ Pour utiliser l'app suivre les config suivantes:
 5. Taper l'adresse suivante dans votre navigateur http://127.0.0.1:8000/ ou http://localhost:8000/
 6. Sur le premier interface fait continuer et vous aurez la page où vous allez simuler le protocole.
 
-### Merci. Bonne simulation
+##### Merci. Bonne simulation
