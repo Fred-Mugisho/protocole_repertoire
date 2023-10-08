@@ -1,6 +1,6 @@
-# PROTOCOLE BQSE SUR LE REPERTOIRE
+# PROTOCOLE BASE SUR LE REPERTOIRE
 
-## Les projets permet de simuler le systeme de coherence de cache pour le cour de systeme a multi-processeur et machine parallele
+## Les projets permet de simuler le système de coherence (protocole basé sur le répertoire) de cache pour le cours de système à multi-processeur et machine parallèle
 
 Pour utiliser l'app suivre les config suivantes:
 1. instaler python
