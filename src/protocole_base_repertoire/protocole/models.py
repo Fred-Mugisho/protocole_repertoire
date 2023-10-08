@@ -3,8 +3,8 @@ from django.db import models
 # Create your models here.
 
 node_choice = (
-    ('Local', 'Local'),
     ('Home', 'Home'),
+    ('Local', 'Local'),
     ('Remote', 'Remote'),
 )
 
@@ -47,6 +47,10 @@ class MemoryBloc(models.Model):
     def __str__(self) -> str:
         return f"B{self.block_num}"
     
+    @property
+    def string_block(self) -> str:
+        return f"B{self.block_num}"
+    
 class Directory(models.Model):
     bloc = models.OneToOneField(MemoryBloc, on_delete=models.CASCADE)
     state = models.CharField(max_length=30, choices=state_block, default='1')
@@ -54,6 +58,10 @@ class Directory(models.Model):
 
     def __str__(self) -> str:
         return self.bloc
+    
+    @property
+    def string_block(self) -> str:
+        return f"B{self.bloc.block_num}"
     
     @property
     def state_directory(self):
@@ -91,9 +99,15 @@ class CacheNode(models.Model):
     
 class MessageSimulation(models.Model):
     type_message = models.CharField(max_length=30, choices=msg_type_choice)
-    source = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='src')
-    destination = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='dest')
+    source = models.CharField(max_length=30)
+    destination = models.CharField(max_length=30)
     content_msg = models.CharField(max_length=20)
 
     def __str__(self) -> str:
         return self.type_message
+    
+    @property
+    def message(self):
+        index = int(self.type_message)
+        index -= 1
+        return msg_type_choice[index][1]

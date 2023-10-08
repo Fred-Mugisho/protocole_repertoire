@@ -18,25 +18,33 @@
             {% for node in nodes %}
                 <div class="col">
                     <div class="card">
-                        <div class="card-header fw-bolder text-center text-uppercase">{{node}}</div>
+                        <div class="card-header fw-bolder text-uppercase text-center text-uppercase">{{node}}</div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-sm">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Block</th>
-                                            <th scope="col">Data</th>
-                                            <th scope="col">Etat</th>
+                                            <th class="fw-bolder text-uppercase">Block</th>
+                                            <th class="fw-bolder text-uppercase">Data</th>
+                                            <th class="fw-bolder text-uppercase">Etat</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% if node.all_caches %}
                                             {% for cache in node.all_caches %}
-                                                <tr>
-                                                    <td>{{cache.bloc}}</td>
-                                                    <td>{{cache.bloc.data}}</td>
-                                                    <td>{{cache.state_cache_state}}</td>
-                                                </tr>
+                                                {% if cache.state_cache == '4' %}
+                                                    <tr class="text-danger">
+                                                        <td>{{cache.bloc}}</td>
+                                                        <td>--</td>
+                                                        <td>{{cache.state_cache_state}}</td>
+                                                    </tr>
+                                                {% else %}
+                                                    <tr>
+                                                        <td>{{cache.bloc}}</td>
+                                                        <td>{{cache.bloc.data}}</td>
+                                                        <td>{{cache.state_cache_state}}</td>
+                                                    </tr>
+                                                {% endif %}
                                             {% endfor %}
                                         {% else %}
                                             <tr>
@@ -56,27 +64,35 @@
         <hr class="text-white">
         <div class="card">
             <div class="card-body">
-                <form action="" method="post" enctype="multipart/form-data" class="">
+                <form action="" method="post" enctype="multipart/form-data" id="form_command">
                     <div class="">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col">
-                                <select name="month" class="form-control form-select custom-select">
+                                <select name="node" class="form-control form-select custom-select">
                                     {% for node in nodes %}
-                                        <option value={{node.ide}}>{{node.node_string}}</option>
+                                        <option value={{node.id}}>{{node.node_string}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                             <div class="col">
-                                <select name="month" class="form-control form-select custom-select">
-                                    {% for block in blocks %}
-                                        <option value={{block.id}}>{{block}}</option>
+                                <select name="block" class="form-control form-select custom-select">
+                                    {% for block in directory %}
+                                        <option value={{block.id}}>{{block.bloc}}</option>
                                     {% endfor %}
                                 </select>
                             </div>
+                            <div class="col">
+                                <input type="text" id="data_send" placeholder="Data write" class="form-control" name="data_send">
+                            </div>
                             <div class="col d-flex gap-2">
-                                <button type="button" class="btn btn-secondary btn-sm" data-mdb-dismiss="modal">Lire</button>
-                                <button type="submit" type="button" class="btn btn-success btn-sm">Ecrire</button>
+                                <button onclick="read_data()" type="button" class="btn btn-secondary btn-sm">Lire</button>
+                                <button onclick="write_data()" type="button" class="btn btn-success btn-sm">Ecrire</button>
+                            </div>
+                            <div class="col">
+                                <a href="{% url "protocole:reinitialisation_data" %}" class="btn btn-primary">
+                                    Reset
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -87,15 +103,15 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-header fw-bolder">Repertoire</div>
+                    <div class="card-header fw-bolder text-uppercase">Repertoire</div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Block</th>
-                                        <th scope="col">Etat</th>
-                                        <th scope="col">Owner bits</th>
+                                        <th class="fw-bolder text-uppercase">Block</th>
+                                        <th class="fw-bolder text-uppercase">Etat</th>
+                                        <th class="fw-bolder text-uppercase">Sharer bits</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -109,35 +125,42 @@
                                 </tbody>
                             </table>
                         </div>
-                        <a href="{% url "protocole:reinitialisation_data" %}" class="btn btn-primary btn-sm">
-                            Réinitialiser
-                        </a>
                     </div>
                 </div>
             </div>
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header fw-bolder">Messages</div>
+                    <div class="card-header fw-bolder text-uppercase">Messages</div>
                     <div class="card-body">
+                        <p class="alert alert-info">On supprimer les messages précedents à chaque requete, pour mieux voir !</p>
                         <div class="table-responsive">
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Type message</th>
-                                        <th scope="col">Source</th>
-                                        <th scope="col">Destination</th>
-                                        <th scope="col">Contenu</th>
+                                        <th class="fw-bolder text-uppercase">Type message</th>
+                                        <th class="fw-bolder text-uppercase">Source</th>
+                                        <th class="fw-bolder text-uppercase">Destination</th>
+                                        <th class="fw-bolder text-uppercase">Contenu</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% if messages %}
                                         {% for msg in messages %}
-                                            <tr>
-                                                <td>{{msg.type_message}}</td>
-                                                <td>{{msg.source.node_string}}</td>
-                                                <td>{{msg.destination.node_string}}</td>
-                                                <td>{{msg.content_msg}}</td>
-                                            </tr>
+                                            {% if msg.type_message == 'Read Miss' or msg.type_message == 'Write Miss' or msg.type_message == 'Fetch/Invalidate' or msg.type_message == 'Invalidate' %}
+                                                <tr class="text-danger">
+                                                    <td>{{msg.type_message}}</td>
+                                                    <td>{{msg.source}}</td>
+                                                    <td>{{msg.destination}}</td>
+                                                    <td>{{msg.content_msg}}</td>
+                                                </tr>
+                                            {% else %}
+                                                <tr>
+                                                    <td>{{msg.type_message}}</td>
+                                                    <td>{{msg.source}}</td>
+                                                    <td>{{msg.destination}}</td>
+                                                    <td>{{msg.content_msg}}</td>
+                                                </tr>
+                                            {% endif %}
                                         {% endfor %}
                                     {% else %}
                                         <tr>
@@ -155,5 +178,23 @@
             </div>
         </div>
     </div>
+    <script>
+        function read_data(){
+            const form_command = document.getElementById('form_command');
+            console.log(form_command);
+            form_command.action = "{% url 'protocole:read_data' %}";
+            form_command.submit();
+        }
+    </script>
+    <script>
+        function write_data(){
+            const form_command = document.getElementById('form_command');
+            const data_send = document.getElementById('data_send');
+            console.log(data_send.value);
+            form_command.action = "{% url 'protocole:write_data' %}";
+            form_command.submit();
+            
+        }
+    </script>
 </body>
 </html>
